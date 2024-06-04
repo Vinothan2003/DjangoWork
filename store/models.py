@@ -3,7 +3,8 @@ from django.db import models
 
 class Collection(models.Model):
     title = models.CharField(max_length=225)
-    featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True)  # CIRCULAR RELATIONSHIP
+    featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True,
+                                         related_name='+')  # CIRCULAR RELATIONSHIP
 
 
 class Promotion(models.Model):
@@ -13,8 +14,10 @@ class Promotion(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=225)
+    # slug = models.SlugField(default="-", null=True)
+    slug = models.SlugField()
     description = models.CharField(max_length=225)
-    price = models.DecimalField(decimal_places=2, max_digits=6)
+    unit_price = models.DecimalField(decimal_places=2, max_digits=6)
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
@@ -33,6 +36,7 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=220)
     last_name = models.CharField(max_length=220)
     email = models.EmailField(unique=True)
+    gender = models.CharField(max_length=30, null=True)
     phone_no = models.CharField(max_length=10)
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
@@ -67,3 +71,7 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)  # ONE-TO-MANY RELATION SHIP
     product = models.ForeignKey(Product, on_delete=models.CASCADE)  # ONE-TO-MANY RELATION SHIP
     quantity = models.PositiveSmallIntegerField()
+
+
+class Address(models.Model):
+    zip = models.IntegerField()
