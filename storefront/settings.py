@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',  # admin interface or manage data
     'django.contrib.auth',  # authenticating user
     'django.contrib.contenttypes',
-    # 'django.contrib.sessions',  # temporary storage on server for managing the data
+    'django.contrib.sessions',  # temporary storage on server for managing the data
     'django.contrib.messages',  # display one time notification to the user
     'django.contrib.staticfiles',  # serving files like image, css file etc.
     'playground',
