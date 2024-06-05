@@ -21,7 +21,7 @@ class Product(models.Model):
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
-    products = models.ManyToManyField(Promotion)  # MANY-TO-MANY RELATIONSHIP
+    promotion = models.ManyToManyField(Promotion)  # MANY-TO-MANY RELATIONSHIP
 
 
 class Customer(models.Model):
