@@ -44,7 +44,7 @@ def say_hello(request):
 
     # --------------------------------------------------------------
     # -- F objects---
-    # query_set = Product.objects.filter(inventory=F('collection__id'))
+    # query_set = Product.objects.filter(inventory=F('collection__id')) --> reference
 
     # --------------------------------------------------------------
     # --sorting--
