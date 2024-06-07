@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',  # admin interface or manage data
     'django.contrib.auth',  # authenticating user
     'django.contrib.contenttypes',
-    # 'django.contrib.sessions',  # temporary storage on server for managing the data
+    'django.contrib.sessions',  # temporary storage on server for managing the data
     'django.contrib.messages',  # display one time notification to the user
     'django.contrib.staticfiles',  # serving files like image, css file etc.
     'playground',
@@ -80,6 +80,7 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
 
 DATABASES = {
     'default': {

@@ -1,5 +1,21 @@
 <html>
 <body>
 <h1>Hello my name is {{ name }}</h1>
+{{ result }}
+<!-- <ul>
+    {% for order in orders %}
+    <li> {{ order.id }} -- {{ order.customer.first_name }} -- </li>
+
+     only -> ${{ product.unit_price }} --  defer -> {{ product.description }} -->
+<!-- <ul>
+    {% for item in order.orderitem_set.all %}
+    <ul>{{ item.product.title }}</ul>
+    {% endfor %}
+</ul>
+{% endfor %} -->
+
+<!--<li> {{ product.title }} -- {{ product.collection.title }}  </li> -> selecting related queries -->
+<!-- <li> {{ product.title }} -- {{ product.unit_price }} </li> -->
+<!--</ul> -->
 </body>
 </html>
