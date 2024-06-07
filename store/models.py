@@ -6,6 +6,12 @@ class Collection(models.Model):
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True,
                                          related_name='+')  # CIRCULAR RELATIONSHIP
 
+    """def __str__(self):
+        return self.title"""
+
+    """class Meta:
+        ordering = ['title']"""
+
 
 class Promotion(models.Model):
     description = models.CharField(max_length=225)
@@ -22,6 +28,9 @@ class Product(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
     promotion = models.ManyToManyField(Promotion)  # MANY-TO-MANY RELATIONSHIP
+
+    """class Meta:
+        ordering = ['title']"""
 
 
 class Customer(models.Model):
