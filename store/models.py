@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 
 class Collection(models.Model):
@@ -6,8 +7,8 @@ class Collection(models.Model):
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True,
                                          related_name='+')  # CIRCULAR RELATIONSHIP
 
-    """def __str__(self):
-        return self.title"""
+    def __str__(self):
+        return self.title
 
     """class Meta:
         ordering = ['title']"""
@@ -22,12 +23,17 @@ class Product(models.Model):
     title = models.CharField(max_length=225)
     # slug = models.SlugField(default="-", null=True)
     slug = models.SlugField()
-    description = models.CharField(max_length=225)
-    unit_price = models.DecimalField(decimal_places=2, max_digits=6)
-    inventory = models.IntegerField()
+    description = models.CharField(max_length=225, null=True, blank=True)
+    unit_price = models.DecimalField(
+        decimal_places=2,
+        max_digits=6,
+        validators=[MinValueValidator(1)]
+        # validators = [MinValueValidator(1, message='')] --> if custom message required
+    )
+    inventory = models.IntegerField(validators=[MinValueValidator(1)])
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
-    promotion = models.ManyToManyField(Promotion)  # MANY-TO-MANY RELATIONSHIP
+    promotion = models.ManyToManyField(Promotion, blank=True)  # MANY-TO-MANY RELATIONSHIP
 
     """class Meta:
         ordering = ['title']"""
@@ -50,6 +56,9 @@ class Customer(models.Model):
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
+
 
 class Order(models.Model):
     PAYMENT_STATUS_PENDING = 'P'
@@ -60,9 +69,12 @@ class Order(models.Model):
         (PAYMENT_STATUS_COMPLETE, 'Complete'),
         (PAYMENT_STATUS_FAILED, 'Failed')
     ]
-    placed_at = models.DateTimeField(auto_now_add=True)
+    placed_at = models.DateTimeField()
     payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='orders')  # ONE-TO-MANY RELATION SHIP
+
+    def __str__(self):
+        return self.payment_status
 
 
 class OrderItem(models.Model):
