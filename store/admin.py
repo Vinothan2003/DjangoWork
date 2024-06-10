@@ -139,7 +139,7 @@ class CustomerAdmin(admin.ModelAdmin):
                 + '?'
                 + urlencode({
                     'customer__id': customer.id
-                })
+                })  
         )
         return format_html('<a href={}> {} </a>',
                            urls,
