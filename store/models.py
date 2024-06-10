@@ -38,6 +38,9 @@ class Product(models.Model):
     """class Meta:
         ordering = ['title']"""
 
+    def __str__(self):
+        return self.title
+
 
 class Customer(models.Model):
     MEMBERSHIP_BRONZE = 'B'
