@@ -2,8 +2,10 @@ from django.contrib import admin, messages
 from django.db.models import Count, Value
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
+from django.contrib.contenttypes.admin import GenericTabularInline
 
 from store import models
+# from tags.models import TaggedItem --> see store custom
 
 
 # Register your models here.
@@ -36,7 +38,7 @@ class CollectionAdmin(admin.ModelAdmin):
         model = models.Collection  # to show which model
 
 
-class InventoryFilter(admin.SimpleListFilter):
+class InventoryFilter(admin.SimpleListFilter):  # custom filter
     title = 'Inventory'
     parameter_name = 'inventory'
 
@@ -69,6 +71,15 @@ class InventoryFilter(admin.SimpleListFilter):
         return queryset
 
 
+"""# generic tabular inline
+class TagInline(GenericTabularInline):
+    model = TaggedItem                       # ---> see store_Custom
+    autocomplete_fields = ['tag']
+    extra = 0
+    min_num = 1
+    max_num = 10"""
+
+
 @admin.register(models.Product)  # using annotation to register
 class ProductAdmin(admin.ModelAdmin):
     # exclude = ['promotion'] --> exclude the field
@@ -79,10 +90,11 @@ class ProductAdmin(admin.ModelAdmin):
         'slug': ['title']
     }
     actions = ['clear_inventory']
+    # inlines = [TagInline]  --> see store_custom
     list_display = ['id', 'title', 'unit_price', 'inventory_status', 'collection']
     list_editable = ['unit_price']
     list_per_page = 15
-    list_filter = ['collection', 'last_update', InventoryFilter]
+    list_filter = ['collection', 'last_update', InventoryFilter]  # --> filter
     search_fields = ['id']
 
     # list_select_related = ['collection'] --> same as query.select_related()
@@ -140,8 +152,13 @@ class CustomerAdmin(admin.ModelAdmin):
         model = models.Customer
 
 
+# inline
 class OrderItemInline(admin.TabularInline):  # TabularInline --> table format , StackedInline --> stack format
     model = models.OrderItem
+    autocomplete_fields = ['product']
+    extra = 0
+    min_num = 1
+    max_num = 10
 
 
 @admin.register(models.Order)
