@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',  # temporary storage on server for managing the data
     'django.contrib.messages',  # display one time notification to the user
     'django.contrib.staticfiles',  # serving files like image, css file etc.
+    'rest_framework',
     'playground',
     "debug_toolbar",
     'likes',
@@ -91,6 +92,10 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'root'
     }
+}
+
+REST_FRAMEWORK = {
+    "COERCE_DECIMAL_TO_STRING": False
 }
 
 # Password validation
