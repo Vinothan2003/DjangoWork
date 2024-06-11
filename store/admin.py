@@ -32,7 +32,7 @@ class CollectionAdmin(admin.ModelAdmin):
                            collection.product_count)
 
     def get_queryset(self, request):
-        return super().get_queryset(request).annotate(product_count=Count('product'))  # overriding the queryset
+        return super().get_queryset(request).annotate(product_count=Count('products'))  # overriding the queryset
 
     class Meta:
         model = models.Collection  # to show which model
