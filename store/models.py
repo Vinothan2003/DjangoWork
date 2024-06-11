@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 
 
-class Collection(models.Model):
+class Collection(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     title = models.CharField(max_length=225)
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True,
                                          related_name='+')  # CIRCULAR RELATIONSHIP
@@ -14,12 +14,12 @@ class Collection(models.Model):
         ordering = ['title']"""
 
 
-class Promotion(models.Model):
+class Promotion(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     description = models.CharField(max_length=225)
     discount = models.FloatField()
 
 
-class Product(models.Model):
+class Product(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     title = models.CharField(max_length=225)
     # slug = models.SlugField(default="-", null=True)
     slug = models.SlugField()
@@ -32,7 +32,7 @@ class Product(models.Model):
     )
     inventory = models.IntegerField(validators=[MinValueValidator(1)])
     last_update = models.DateTimeField(auto_now=True)
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
+    collection = models.ForeignKey(Collection, on_delete=models.PROTECT, related_name='products')  # ONE-TO-MANY RELATION SHIP
     promotion = models.ManyToManyField(Promotion, blank=True)  # MANY-TO-MANY RELATIONSHIP
 
     """class Meta:
@@ -42,7 +42,7 @@ class Product(models.Model):
         return self.title
 
 
-class Customer(models.Model):
+class Customer(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     MEMBERSHIP_BRONZE = 'B'
     MEMBERSHIP_SILVER = 'S'
     MEMBERSHIP_GOLD = 'G'
@@ -63,7 +63,7 @@ class Customer(models.Model):
         return self.first_name + ' ' + self.last_name
 
 
-class Order(models.Model):
+class Order(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     PAYMENT_STATUS_PENDING = 'P'
     PAYMENT_STATUS_COMPLETE = 'C'
     PAYMENT_STATUS_FAILED = 'F'
@@ -80,22 +80,22 @@ class Order(models.Model):
         return self.payment_status
 
 
-class OrderItem(models.Model):
+class OrderItem(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     order = models.ForeignKey(Order, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='orderitems')  # ONE-TO-MANY RELATION SHIP
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
 
 
-class Cart(models.Model):
+class Cart(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     create_at = models.DateTimeField(auto_now_add=True)
 
 
-class CartItem(models.Model):
+class CartItem(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)  # ONE-TO-MANY RELATION SHIP
     product = models.ForeignKey(Product, on_delete=models.CASCADE)  # ONE-TO-MANY RELATION SHIP
     quantity = models.PositiveSmallIntegerField()
 
 
-class Address(models.Model):
+class Address(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     zip = models.IntegerField()

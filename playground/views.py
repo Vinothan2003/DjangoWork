@@ -34,7 +34,7 @@ def say_hello(request):
 
     # --------------------------------------------------------------
     # -- complex lookups--
-    # query_set = Product.objects.filter(unit_price__lt=20, inventory__lt=20) --> 1 - and
+    # query_set = Product.objects.filter(unit_price__lt=20, inventory__lt=20) --> 1 -> and (logical operator)
     # query_set = Product.objects.filter(inventory__gt=20).filter(unit_price__gt=20) --> 2 - and
 
     """ query_set = Product.objects.filter(
