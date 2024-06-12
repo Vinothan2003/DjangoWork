@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from decimal import Decimal
 
 
 class Collection(models.Model):  # INTERNAL RESOURCE REPRESENTATION
@@ -27,7 +28,7 @@ class Product(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     unit_price = models.DecimalField(
         decimal_places=2,
         max_digits=6,
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(Decimal(1.00))]
         # validators = [MinValueValidator(1, message='')] --> if custom message required
     )
     inventory = models.IntegerField(validators=[MinValueValidator(1)])

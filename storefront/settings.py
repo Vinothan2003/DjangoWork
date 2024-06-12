@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',  # display one time notification to the user
     'django.contrib.staticfiles',  # serving files like image, css file etc.
     'rest_framework',
+    'django_filters',
     'playground',
     "debug_toolbar",
     'likes',
@@ -95,7 +95,8 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    "COERCE_DECIMAL_TO_STRING": False
+    "COERCE_DECIMAL_TO_STRING": False,
+    "PAGE_SIZE": 10
 }
 
 # Password validation
