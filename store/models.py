@@ -32,7 +32,8 @@ class Product(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     )
     inventory = models.IntegerField(validators=[MinValueValidator(1)])
     last_update = models.DateTimeField(auto_now=True)
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT, related_name='products')  # ONE-TO-MANY RELATION SHIP
+    collection = models.ForeignKey(Collection, on_delete=models.PROTECT,
+                                   related_name='products')  # ONE-TO-MANY RELATION SHIP
     promotion = models.ManyToManyField(Promotion, blank=True)  # MANY-TO-MANY RELATIONSHIP
 
     """class Meta:
@@ -82,7 +83,8 @@ class Order(models.Model):  # INTERNAL RESOURCE REPRESENTATION
 
 class OrderItem(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     order = models.ForeignKey(Order, on_delete=models.PROTECT)  # ONE-TO-MANY RELATION SHIP
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='orderitems')  # ONE-TO-MANY RELATION SHIP
+    product = models.ForeignKey(Product, on_delete=models.PROTECT,
+                                related_name='orderitems')  # ONE-TO-MANY RELATION SHIP
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
 
@@ -99,3 +101,10 @@ class CartItem(models.Model):  # INTERNAL RESOURCE REPRESENTATION
 
 class Address(models.Model):  # INTERNAL RESOURCE REPRESENTATION
     zip = models.IntegerField()
+
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=225)
+    date = models.DateTimeField(auto_now_add=True)
+    description = models.TextField()
