@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal
-from store.models import Product, Collection
+from store.models import Product, Collection, Review
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -10,60 +10,25 @@ class CollectionSerializer(serializers.ModelSerializer):
 
     products_count = serializers.IntegerField(read_only=True)
 
-    # id = serializers.IntegerField()
-    # title = serializers.CharField(max_length=225)
-
 
 class ProductSerializer(serializers.ModelSerializer):  # EXTERNAL RESOURCE REPRESENTATION
     class Meta:  # --> model serialization
         model = Product
         fields = ['id', 'title', 'slug', 'description', 'inventory', 'unit_price', 'tax_price', 'collection']
 
-    # id = serializers.IntegerField()
-    # title = serializers.CharField(max_length=225)
-    # price = serializers.DecimalField(max_digits=6, decimal_places=2, source='unit_price')  # external field changed
     tax_price = serializers.SerializerMethodField(method_name='calculate_tax')
-
-    # collection = serializers.HyperlinkedRelatedField(
-    #     queryset=Collection.objects.all(),
-    #     view_name='collection-detail'
-    # )
 
     def calculate_tax(self, product: Product):
         return product.unit_price * Decimal(1.1)  # converting float to decimal
 
-    """ 
-    class ProductSerializer(serializers.Serializer):  # EXTERNAL RESOURCE REPRESENTATION
-        id = serializers.IntegerField()
-        title = serializers.CharField(max_length=225)
-        price = serializers.DecimalField(max_digits=6, decimal_places=2, source='unit_price')  # external field changed
-        tax_price = serializers.SerializerMethodField(method_name='calculate_tax')
-        collection = serializers.HyperlinkedRelatedField(
-            queryset=Collection.objects.all(),
-            view_name='collection-detail'
-            )"""
 
-    """def validate(self, data):
-            if data['password'] != data['confirm_password']:             --> overriding the validate method
-                return serializers.ValidationError("password does not match")
-            return data"""
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
 
-    """def create(self, validated_data):
-        product = Product(**validated_data)
-        product.unit_price = 1                  # --> overriding the create method
-        product.save()
-        return product"""
+        fields = ['id', 'name', 'date', 'description', 'product_id']
+        read_only_fields = ['product_id']
 
-    """def update(self, instance, validated_data):     # --> overriding the update field
-        instance.unit_price = validated_data.get('unit_price') 
-        instance.save()
-        return instance"""
-
-    # collection = CollectionSerializer()  # --> to show in nested objects
-
-    """
-        collection = serializers.PrimaryKeyRelatedField(
-            queryset=Collection.objects.all()  # --> to Show the primary key filed
-    """
-
-    # collection_name = serializers.StringRelatedField(source='collection') --> to show the string
+    def create(self, validated_data):
+        product_id = self.context['product_id']
+        return Review.objects.create(product_id=product_id, **validated_data)
