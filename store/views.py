@@ -5,15 +5,16 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.views import Response, status, APIView
 from rest_framework.decorators import api_view
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, ListModelMixin
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 
 from store.filter import ProductFilter
-from store.models import Product, Collection, OrderItem, Review
-from store.serilaizer import ProductSerializer, CollectionSerializer, ReviewSerializer
+from store.models import Product, Collection, OrderItem, Review, Cart, CartItem
+from store.serilaizer import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
+    CartItemSerializer
 
 
 # Create your views here.
@@ -26,7 +27,7 @@ class ProductViewSet(ModelViewSet):
     filterset_fields = ['collection_id']  # --> don't require filtering logic
     search_fields = ['title']
     ordering_fields = ['title', 'unit_price']
-    pagination_class = PageNumberPagination
+    # pagination_class = PageNumberPagination --> pagination
 
     """def get_queryset(self): # filtering logic
         queryset = Product.objects.all()
@@ -77,3 +78,27 @@ class ReviewViewSet(ModelViewSet):
 
     def get_queryset(self):  # --> getting id form th url
         return Review.objects.filter(product_id=self.kwargs['product_pk'])
+
+
+class CartViewSet(CreateModelMixin,
+                  RetrieveModelMixin,
+                  DestroyModelMixin,
+                  GenericViewSet):
+    queryset = Cart.objects.prefetch_related(
+        'items__product').all()  # prefetch_related('items__product') --> to get the product in db in one go
+    serializer_class = CartSerializer
+
+
+"""class CartItemViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+    # queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer"""
+
+
+class CartItemViewSet(ModelViewSet):
+    serializer_class = CartItemSerializer
+
+    def get_queryset(self):  # getting card id from the url
+        return CartItem.objects.select_related('product').filter(cart_id=self.kwargs['cart_pk'])
+
+    """ def get_serializer_context(self):
+         return {'card_id': self.kwargs['cart_id']}"""

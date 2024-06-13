@@ -172,5 +172,14 @@ class OrderAdmin(admin.ModelAdmin):
     class Meta:
         model = models.Order
 
+
+@admin.register(models.CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ['id', 'cart_id', 'product_id', 'quantity']
+    readonly_fields = ['id']
+
+    class Meta:
+        model = models.CartItem
+
 # admin.site.register(models.Collection, CollectionAdmin) # using method to register
 # admin.site.register(models.Product, ProductAdmin) # using method to register

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+from uuid import uuid4
 
 
 class Collection(models.Model):  # INTERNAL RESOURCE REPRESENTATION
@@ -91,13 +92,20 @@ class OrderItem(models.Model):  # INTERNAL RESOURCE REPRESENTATION
 
 
 class Cart(models.Model):  # INTERNAL RESOURCE REPRESENTATION
+    id = models.UUIDField(primary_key=True, default=uuid4)
     create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
 
 
 class CartItem(models.Model):  # INTERNAL RESOURCE REPRESENTATION
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)  # ONE-TO-MANY RELATION SHIP
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')  # ONE-TO-MANY RELATION SHIP
     product = models.ForeignKey(Product, on_delete=models.CASCADE)  # ONE-TO-MANY RELATION SHIP
     quantity = models.PositiveSmallIntegerField()
+
+    class Meta:
+        unique_together = [['cart', 'product']]
 
 
 class Address(models.Model):  # INTERNAL RESOURCE REPRESENTATION
