@@ -96,7 +96,7 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     "COERCE_DECIMAL_TO_STRING": False,
-    "PAGE_SIZE": 10
+    # "PAGE_SIZE": 10
 }
 
 # Password validation
